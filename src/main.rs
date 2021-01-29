@@ -31,7 +31,8 @@ mod config;
 mod commands;
 use commands::{
     info::*,
-    owner::*
+    owner::*,
+    utility::*
 };
 
 pub struct ShardManagerContainer;
@@ -45,9 +46,24 @@ struct Handler;
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content.to_lowercase() == "devilbot is the best" {
-            if let Err(why) = msg.reply_ping(ctx, "Yes he is").await {
-                red_ln!("Error sending message: {:?}", why);
+        let eligible_guilds: Vec<u64> = vec![696343847210319924, 745942562648621109];
+        let mention_strings: Vec<&str> = vec!["<@!720229743974285312>", "<@720229743974285312>"];
+        let mut mentions_me: bool = false;
+
+        if let Some(guild_id) = msg.guild_id {
+            if eligible_guilds.contains(&guild_id.0) {
+                let content: &str = &msg.content.to_lowercase();
+                if mention_strings.contains(&content) {
+                    mentions_me = true;
+                }
+            }
+        }
+
+        if mentions_me {
+            if let Err(why) = msg.reply_ping(ctx,
+            "The DevilBot Rust branch is available in this guild. Use `&rust help` \
+            to see the faster, alternate commands available.").await {
+            red_ln!("Error sending message: {:?}", why);
             }
         }
     }
@@ -79,7 +95,8 @@ async fn main() {
             .with_whitespace(true)
             .prefix("&rust "))
         .group(&OWNER_GROUP)
-        .group(&INFO_GROUP);
+        .group(&INFO_GROUP)
+        .group(&UTILITY_GROUP);
 
     let mut client = Client::builder(token)
         .event_handler(Handler)
@@ -111,3 +128,7 @@ struct Info;
 #[group]
 #[commands(quit)]
 struct Owner;
+
+#[group]
+#[commands(wiki)]
+struct Utility;

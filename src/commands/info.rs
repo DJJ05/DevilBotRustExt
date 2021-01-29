@@ -1,3 +1,6 @@
+use std::time::{
+    Instant
+};
 use serenity::{
   framework::standard::{
       CommandResult,
@@ -9,7 +12,11 @@ use serenity::{
 
 #[command]
 async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
-    msg.reply_ping(ctx, "Pong!").await?;
+    let start = Instant::now();
+    let mut reply = msg.reply_ping(ctx, "Pong!").await?;
+    let duration = start.elapsed();
+    reply.edit(ctx, |c|
+        c.content(format!("Response Time (Latency): `{:?}`", duration))).await?;
 
     Ok(())
 }

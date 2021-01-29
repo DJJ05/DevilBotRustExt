@@ -9,6 +9,8 @@ edition = "2018"
 [dependencies]
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros", "signal"] }
 colour = "0.5.0"
+wikipedia = "0.3.4"
+titlecase = "1.0"
 
 [dependencies.serenity]
 features = ["framework", "standard_framework"]
