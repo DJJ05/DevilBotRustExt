@@ -17,6 +17,8 @@ use wikipedia;
 use titlecase::titlecase;
 
 #[command]
+/// Scoures wikipedia for a query. Returns summary, link, and response time.
+/// **Example usage:** `&rust wiki Margaret Thatcher`
 async fn wiki(ctx: &Context, msg: &Message, search_query: Args) -> CommandResult {
     let query = search_query.rest();
 

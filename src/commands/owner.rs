@@ -15,6 +15,8 @@ use colour::{
 
 #[command]
 #[owners_only]
+/// Closes the bot in the same fashion as ctrl+c. Restarts if under systemcd.
+/// **Example usage:** `&rust quit`
 async fn quit(ctx: &Context, msg: &Message) -> CommandResult {
     let data = ctx.data.read().await;
 

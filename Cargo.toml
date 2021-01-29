@@ -13,5 +13,5 @@ wikipedia = "0.3.4"
 titlecase = "1.0"
 
 [dependencies.serenity]
-features = ["framework", "standard_framework"]
+features = ["framework", "standard_framework", "utils"]
 version = "0.10"

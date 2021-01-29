@@ -14,14 +14,24 @@ use serenity::{
     },
     model::{
         gateway::Ready,
-        channel::Message
+        channel::Message,
+        prelude::{
+            UserId
+        }
     },
     framework::standard::{
         StandardFramework,
+        help_commands,
+        Args,
+        HelpOptions,
+        CommandGroup,
+        CommandResult,
         macros::{
-            group
+            group,
+            help
         }
-    }
+    },
+    utils::Colour
 };
 use colour::{
     green_ln,
@@ -94,9 +104,10 @@ async fn main() {
             .owners(owners)
             .with_whitespace(true)
             .prefix("&rust "))
-        .group(&OWNER_GROUP)
-        .group(&INFO_GROUP)
-        .group(&UTILITY_GROUP);
+            .help(&DEVILBOT_HELP)
+            .group(&OWNER_GROUP)
+            .group(&INFO_GROUP)
+            .group(&UTILITY_GROUP);
 
     let mut client = Client::builder(token)
         .event_handler(Handler)
@@ -121,14 +132,32 @@ async fn main() {
     }
 }
 
+#[help]
+async fn devilbot_help(
+    context: &Context,
+    msg: &Message,
+    args: Args,
+    help_options: &'static HelpOptions,
+    groups: &[&'static CommandGroup],
+    owners: HashSet<UserId>
+) -> CommandResult {
+    let mut ho = help_options.clone();
+    ho.embed_success_colour = Colour::from(0xb7410e);
+    let _ = help_commands::with_embeds(context, msg, args, &ho, groups, owners).await;
+    Ok(())
+}
+
 #[group]
-#[commands(ping)]
+#[commands(ping, help)]
+/// Group of commands dedicated to information gathering.
 struct Info;
 
 #[group]
 #[commands(quit)]
+/// Group of commands dedicated to owner-only operations.
 struct Owner;
 
 #[group]
 #[commands(wiki)]
+/// Group of commands dedicated to utility and efficiency operations.
 struct Utility;
