@@ -47,6 +47,12 @@ async fn wiki(ctx: &Context, msg: &Message, search_query: Args) -> CommandResult
         summary = format!("{}...", &summary[0..497]);
     };
 
+    let images = page.get_images();
+    let has_images = match images {
+        Ok(_) => true,
+        Err(_) => false
+    };
+
     reply.edit(ctx, |c| {
         c.content(format!("Scraped in `{:?}`", duration));
         c.embed(|e| {
@@ -54,6 +60,12 @@ async fn wiki(ctx: &Context, msg: &Message, search_query: Args) -> CommandResult
             e.description(summary);
             e.colour(0xb7410e);
             e.url(url);
+            if has_images {
+                let image_vec: Vec<_> = images.unwrap().collect();
+                if image_vec.len() > 0 {
+                    e.thumbnail(&image_vec[0].url);
+                }
+            }
             e
         })
     }).await?;
