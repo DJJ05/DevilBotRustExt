@@ -133,6 +133,12 @@ async fn main() {
 }
 
 #[help]
+#[individual_command_tip =
+"Welcome to the Rust extension of DevilBot, made using [serenity](https://crates.io/crates/serenity). Go star the [repo!](https://github.com/DevilJamJar/DevilBotRustExt)\n\
+Use `&rust help [command/group]` for specific command / group help.\n"]
+#[no_help_available_text =
+"**Error:** Couldn't find that command or group"]
+#[max_levenshtein_distance(3)]
 async fn devilbot_help(
     context: &Context,
     msg: &Message,
